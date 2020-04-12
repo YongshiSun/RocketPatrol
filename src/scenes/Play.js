@@ -11,6 +11,11 @@ class Play extends Phaser.Scene {
         this.load.image('starfield','./assets/starfield.png');
         //load spritesheet
         this.load.spritesheet('explosion','./assets/explosion.png',{frameWidth: 64, frameheight: 32, startFrame: 0, endFrame: 9});
+
+        //load audio
+        this.load.audio('sfx_select', './assets/blip_select12.wav');
+        this.load.audio('sfx_explosion', './assets/explosion38.wav');
+        this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
     }
 
     create(){ //something that loads once after game starts
@@ -51,14 +56,52 @@ class Play extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('explosion',{start:0, end: 9, first: 0}),
             framerate: 30,
         });
+
+        // score
+        this.p1Score = 0;
+
+        //score display
+        let scoreConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        this.scoreLeft = this.add.text(69, 54, this.p1Score, scoreConfig);
+
+        //game over flag
+        this.gameOver = false;
+
+        //60-sec play clock to end the game
+        scoreConfig.fixedWidth = 0;
+        this.clock = this.time.delayedCall(game.settings.gameTimer, () =>{
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0,5);
+            this.add.text(game.config.width/2, game.config.height/2 + 64, '(F)ire to Restart or <- for Menu', scoreConfig).setOrigin(0.5);
+            this.gameOver = true;
+        }, null, this);
+
     }
 
     update(){ //something that reloads every frame
+
+        //check key input for restart
+        if(this.gameOver && Phaser.Input.Ketboard.JustDown(keyF)){
+            this.scene.restart(this.p1Score);
+        }
+
+
         // scroll starfield
         // -= 4 means move backwards 4 pixels each frame on x axis
         this.starfield.tilePositionX -= 4;
         //this.starfield.tilePositionY -= 4;
 
+        /*
         //update rocket
         this.p1Rocket.update();
 
@@ -66,6 +109,7 @@ class Play extends Phaser.Scene {
         this.ship01.update();
         this.ship02.update();
         this.ship03.update();
+        */
 
         //check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)){
@@ -82,6 +126,17 @@ class Play extends Phaser.Scene {
             //console.log('kaboom ship 01');
             this.p1Rocket.reset();
             this.shipExplode(this.ship01);
+        }
+
+        //only update rocket and spaceships if game is not over
+        if(!this.gameOver){
+            //update rocket
+            this.p1Rocket.update();
+
+            //update spaceship
+            this.ship01.update();
+            this.ship02.update();
+            this.ship03.update();
         }
     }
 
@@ -109,5 +164,11 @@ class Play extends Phaser.Scene {
            ship.alpha = 1; // make ship visible again
            boom.destroy(); //remove explosion sprite
         });
+
+        //score increment and repaint
+        this.p1Score += ship.points;
+        this.scoreLeft.text = this.p1Score;
+
+        this.sound.play('sfx_explosion');
     }
 }

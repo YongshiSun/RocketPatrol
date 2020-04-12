@@ -3,14 +3,67 @@ class Menu extends Phaser.Scene {
         super("menuScene");
     }
     create(){
-        //console.log(this);
+        //menu display
+        let menuConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 0
+        }
+        
 
         //displays menu text
         // add this text to screen at (x axis,y axis,string)
         // 0,0 coordination is upper left corner
-        this.add.text(20,20,"Rocket Patrol Menu");
+        //this.add.text(20,20,"Rocket Patrol Menu");
+        let centerX = game.config.width/2;
+        let centerY = game.config.height/2;
+        let textSpacer = 64;
+
+        this.add.text(centerX, centerY- textSpacer, 'ROCKET PATROL', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY, 'Use <--> arrows to move & (F) to Fire', menuConfig).setOrigin(0.5);
+        menuConfig.backgroundColor = '#00FF00';
+        menuConfig.color = '#000';
+        this.add.text(centerX,centerY + textSpacer,'Press <- for Easy or -> for Hard', menuConfig).setOrigin(0.5);
 
         //launch the next scene
-        this.scene.start("playScene");
+        //this.scene.start("playScene");
+
+        // define keys
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+    }
+
+    update() {
+        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            // easy mode
+            game.settings = {
+                spaceshipSpeed: 3,
+                gameTimer: 60000    
+            }
+            this.sound.play('sfx_select');
+            this.scene.start("playScene");    
+        }
+        if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
+            // hard mode
+            game.settings = {
+                spaceshipSpeed: 4,
+                // faster time to end the game
+                gameTimer: 45000    
+            }
+            this.sound.play('sfx_select');
+            this.scene.start("playScene");    
+        }
+
+        // goes back to menu if left key is pressed down
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            this.scene.start("menuScene");
+        }
     }
 }
