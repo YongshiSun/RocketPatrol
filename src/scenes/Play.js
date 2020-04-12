@@ -32,6 +32,11 @@ class Play extends Phaser.Scene {
         // add this text to screen at (x axis,y axis,string)
         // 0,0 coordination is upper left corner
         //this.add.text(20,20,"Rocket Patrol Play");
+
+        //define keyboard keys
+        keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
     }
 
     update(){ //something that reloads every frame
@@ -39,5 +44,8 @@ class Play extends Phaser.Scene {
         // -= 4 means move backwards 4 pixels each frame on x axis
         this.starfield.tilePositionX -= 4;
         //this.starfield.tilePositionY -= 4;
+
+        //update rocket
+        this.p1Rocket.update();
     }
 }
