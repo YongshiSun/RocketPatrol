@@ -25,9 +25,14 @@ class Play extends Phaser.Scene {
         // green UI background
         this.add.rectangle(37,42,566,64,0x00FF00).setOrigin(0,0);
 
-        //add Rocket (p1)
+        //add rocket (p1)
         // constructor(scene, x, y, texture, frame) just skip frame bc phaser dont care about frame
         this.p1Rocket = new Rocket(this, game.config.width/2,431,'rocket').setScale(0.5,0.5).setOrigin(0,0);
+
+        // add spaceships (x3)
+        this.ship01 = new Spaceship(this, game.config.width+192, 132, 'spaceship', 0, 30).setOrigin(0,0);
+        this.ship02 = new Spaceship(this, game.config.width+96, 196, 'spaceship', 0, 20).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceship', 0, 10).setOrigin(0,0);
 
         // add this text to screen at (x axis,y axis,string)
         // 0,0 coordination is upper left corner
@@ -47,5 +52,10 @@ class Play extends Phaser.Scene {
 
         //update rocket
         this.p1Rocket.update();
+
+        //update spaceship
+        this.ship01.update();
+        this.ship02.update();
+        this.ship03.update();
     }
 }
