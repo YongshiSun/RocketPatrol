@@ -2,6 +2,22 @@ class Menu extends Phaser.Scene {
     constructor(){
         super("menuScene");
     }
+
+    preload(){ //something that loads before game starts
+        //load images/tile sprite
+        //('what you want to define the name as', 'where is this in the folder')
+        this.load.image('rocket','./assets/rocket.png');
+        this.load.image('spaceship','./assets/spaceship.png');
+        this.load.image('starfield','./assets/starfield.png');
+        //load spritesheet
+        this.load.spritesheet('explosion','./assets/explosion.png',{frameWidth: 64, frameheight: 32, startFrame: 0, endFrame: 9});
+
+        //load audio
+        this.load.audio('sfx_select', './assets/blip_select12.wav');
+        this.load.audio('sfx_explosion', './assets/explosion38.wav');
+        this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+    }
+
     create(){
         //menu display
         let menuConfig = {
@@ -41,7 +57,7 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        if (keyLEFT.isDown) {
             // easy mode
             game.settings = {
                 spaceshipSpeed: 3,
@@ -50,7 +66,7 @@ class Menu extends Phaser.Scene {
             this.sound.play('sfx_select');
             this.scene.start("playScene");    
         }
-        if (Phaser.Input.Keyboard.JustDown(keyRIGHT)) {
+        if (keyRIGHT.isDown) {
             // hard mode
             game.settings = {
                 spaceshipSpeed: 4,
