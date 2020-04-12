@@ -25,10 +25,13 @@ class Play extends Phaser.Scene {
         // green UI background
         this.add.rectangle(37,42,566,64,0x00FF00).setOrigin(0,0);
 
+        //add Rocket (p1)
+        // constructor(scene, x, y, texture, frame) just skip frame bc phaser dont care about frame
+        this.p1Rocket = new Rocket(this, game.config.width/2,431,'rocket').setScale(0.5,0.5).setOrigin(0,0);
 
         // add this text to screen at (x axis,y axis,string)
         // 0,0 coordination is upper left corner
-        this.add.text(20,20,"Rocket Patrol Play");
+        //this.add.text(20,20,"Rocket Patrol Play");
     }
 
     update(){ //something that reloads every frame
